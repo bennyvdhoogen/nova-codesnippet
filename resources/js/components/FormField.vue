@@ -1,84 +1,59 @@
 <template>
-    <default-field :field="field">
-        <template slot="field">
-            <div class="inline-flex mb-2">
-                <div class="color-input rounded-l-lg border-r-0 h-100 border border-60 color-input-value" v-bind:style="{ backgroundColor: value, width: '36px' }"></div>
-                <input :id="field.name" type="text"
-                       class="w-25 form-control form-input form-input-bordered color-input rounded-l-none"
-                       :class="errorClasses"
-                       :placeholder="placeholder"
-                       v-model="value"
-                />
-            </div>
-            <component
-              :is="component"
-              :id="field.name"
-              :class="errorClasses"
-              :palette="palette"
-              :value="value"
-              @input="handleChange">
-            </component>
-            <p v-if="hasError" class="my-2 text-danger">
-                {{ firstError }}
-            </p>
-        </template>
-    </default-field>
+  <default-field :field="field" :errors="errors" :show-help-text="showHelpText" v-if="selectedEvent">
+    <template slot="field">
+      <vue-code-highlight language="javascript">
+          {{value}}
+        </vue-code-highlight>
+    </template>
+  </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "laravel-nova";
+import { FormField, HandlesValidationErrors } from 'laravel-nova';
+
+// You have to extract the component from the module
+import { component as VueCodeHighlight } from 'vue-code-highlight';
+import 'vue-code-highlight/themes/prism.css';
 
 export default {
-    mixins: [FormField, HandlesValidationErrors],
-
-    props: ["resourceName", "resourceId", "field"],
-
-    methods: {
-        /**
-         * Set the initial, internal value for the field.
-         */
-        setInitialValue() {
-            this.value = this.field.value || "";
-        },
-
-        /**
-         * Fill the given FormData object with the field's internal value.
-         */
-        fill(formData) {
-            formData.append(this.field.attribute, this.value || "");
-        },
-
-        /**
-         * Update the field's internal value.
-         */
-        handleChange(value) {
-            this.value = value.hex;
+  mixins: [FormField, HandlesValidationErrors],
+  components:{
+    VueCodeHighlight,
+  },
+  props: ['resourceName', 'resourceId', 'field', 'linked_field', 'linked_field_check_value'],
+  data() {
+        return {
+            selectedEvent: ''
+        };
+    },
+  mounted(){
+        if (this.field.linked_field) {
+            this.seTimer = setInterval(() => {
+                this.selectedEvent = '';
+                const elemSelector = "#" + this.field.linked_field;
+                if(document.querySelector(elemSelector).value == this.field.linked_field_check_value){
+                    this.selectedEvent = document.querySelector(elemSelector).value;
+                }
+            }, 50);
         }
+  },
+  methods: {
+    /*
+     * Set the initial, internal value for the field.
+     */
+    setInitialValue() {
+      this.value = this.parseCodeInput(this.field.attribute) || ''
+    },
+    parseCodeInput(input){
+        return input
     },
 
-    computed: {
-        /**
-         * Determines which color picker component to use
-         */
-        component() {
-            return this.field.pickerType + "-picker";
-        },
-        /**
-         * Set color palette.
-         */
-        palette() {
-            return this.field.palette || undefined;
-        },
-        /**
-         * Determines the placeholder.
-         */
-        placeholder() {
-            if (this.field.extraAttributes === undefined) {
-                return this.field.name;
-            }
-
-            return this.field.extraAttributes.placeholder || this.field.name;
-        }
-    }
-};
+    /**
+     * Fill the given FormData object with the field's internal value.
+     */
+    fill(formData) {
+      // No need to fill, this is just a contextual view component
+    },
+  },
+}
 </script>

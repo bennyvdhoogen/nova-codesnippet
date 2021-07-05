@@ -15,5 +15,6 @@
   },
   "dependencies": {
     "vue": "^2.5.0",
+    "vue-code-highlight": "^0.7.8"
   }
 }
