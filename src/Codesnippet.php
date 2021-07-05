@@ -26,13 +26,6 @@ class Codesnippet extends Field
      */
     public $showOnDetail = false;
 
-    /**
-     * Indicates if the element should be shown on the creation view.
-     *
-     * @var \Closure|bool
-     */
-    public $showOnCreation = false;
-
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
         parent::__construct($name, $attribute, $resolveCallback);
