@@ -28,4 +28,4 @@ Codesnippet::make('example-code', '
 ## Thanks to
 
 This packages dependes on the `Prism` and `vue-code-highlight` packages for syntax highlighting.
-All credits in that regard go to the maintainers of that package.
+All credits in that regard go to the maintainers of those packages.
