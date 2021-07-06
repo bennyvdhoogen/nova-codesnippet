@@ -13,7 +13,7 @@ Codesnippet::make('example-code', '
 ')
 ```
 
-Optionally, the field can also be displayed conditionally. This can be done by supplying the literal field name and value to check.
+The field can also be displayed conditionally. This can be done by supplying the literal field name and value to check.
 
 ```php
 Codesnippet::make('example-code', '
